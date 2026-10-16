@@ -1,0 +1,29 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "ad_astra"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "fC",
+    " c"
+  ],
+  "key": {
+    "f": {
+      "item": "ad_astra:fan"
+    },
+    "C": {
+      "item": "opencomputers:chip2"
+    },
+    "c": {
+      "item": "opencomputers:card"
+    }
+  },
+  "result": {
+    "id": "ocr_extra_drivers:worldsensorcard",
+    "count": 1
+  }
+}

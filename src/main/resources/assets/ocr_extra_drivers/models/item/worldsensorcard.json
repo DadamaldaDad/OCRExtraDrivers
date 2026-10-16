@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "ocr_extra_drivers:item/worldsensorcard"
+  }
+}
