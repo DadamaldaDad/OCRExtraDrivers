@@ -53,7 +53,7 @@ public class DriverEtrionicBlastFurnace extends DriverSidedBlockEntity {
             return new Object[]{blockEntity.getEnergy(Direction.UP).getStoredAmount()};
         }
 
-        @Callback(doc = "function():number -- The size of the machine's buffer.")
+        @Callback(doc = "function():number -- The size of the machine's energy buffer.")
         public Object[] getMaxEnergy(Context context, Arguments args) {
             return new Object[]{blockEntity.getEnergy(Direction.UP).getCapacity()};
         }
@@ -74,6 +74,33 @@ public class DriverEtrionicBlastFurnace extends DriverSidedBlockEntity {
                 case EtrionicBlastFurnaceBlockEntity.Mode.BLASTING -> new Object[]{"blasting"};
                 case EtrionicBlastFurnaceBlockEntity.Mode.ALLOYING -> new Object[]{"alloying"};
             };
+        }
+
+        @Callback(doc = "function():boolean -- Get the working mode of the etrionic blast furnace")
+        public Object[] setMode(Context context, Arguments args) {
+            if(!args.isString(0)) return new Object[]{false};
+            switch(args.checkString(0)) {
+                case "blasting":
+                    if(blockEntity.mode() != EtrionicBlastFurnaceBlockEntity.Mode.BLASTING) {
+                        blockEntity.setMode(EtrionicBlastFurnaceBlockEntity.Mode.BLASTING);
+                        blockEntity.setChanged();
+                        blockEntity.sync();
+                        return new Object[]{true};
+                    } else {
+                        return new Object[]{false};
+                    }
+                case "alloying":
+                    if(blockEntity.mode() != EtrionicBlastFurnaceBlockEntity.Mode.ALLOYING) {
+                        blockEntity.setMode(EtrionicBlastFurnaceBlockEntity.Mode.ALLOYING);
+                        blockEntity.setChanged();
+                        blockEntity.sync();
+                        return new Object[]{true};
+                    } else {
+                        return new Object[]{false};
+                    }
+                default:
+                    return new Object[]{false};
+            }
         }
     }
 
