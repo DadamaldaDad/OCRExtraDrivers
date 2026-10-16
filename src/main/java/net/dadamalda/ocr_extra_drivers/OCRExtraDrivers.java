@@ -5,6 +5,7 @@ import net.dadamalda.ocr_extra_drivers.core.PlanetDataProviders;
 import net.dadamalda.ocr_extra_drivers.init.OEDCreativeModeTabs;
 import net.dadamalda.ocr_extra_drivers.init.OEDItems;
 import net.dadamalda.ocr_extra_drivers.integration.ad_astra.AdAstraPlanetDataProvider;
+import net.dadamalda.ocr_extra_drivers.integration.ad_astra.ModAdAstra;
 import net.dadamalda.ocr_extra_drivers.integration.ocr_extra_drivers.DriverWorldSensorCard;
 import net.dadamalda.ocr_extra_drivers.integration.ocr_extra_drivers.HardcodedPlanetDataProvider;
 import net.neoforged.bus.api.IEventBus;
@@ -34,7 +35,7 @@ public class OCRExtraDrivers {
         Driver.add(DriverWorldSensorCard.Provider.INSTANCE);
 
         if(ModList.get().isLoaded("ad_astra"))
-            PlanetDataProviders.register(new AdAstraPlanetDataProvider());
+            ModAdAstra.initialize();
 
         PlanetDataProviders.register(new HardcodedPlanetDataProvider());
     }
