@@ -125,6 +125,8 @@ dependencies {
     implementation("maven.modrinth:resourceful-lib:x99nCLTm")
     implementation("maven.modrinth:resourceful-config:lSbyRD6v")
     implementation("maven.modrinth:common-storage-lib:SCkdlli6")
+
+    implementation("maven.modrinth:immersiveengineering:uNRARSH2")
     // Example mod dependency with JEI
     // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime
     // compileOnly "mezz.jei:jei-${mc_version}-common-api:${jei_version}"
