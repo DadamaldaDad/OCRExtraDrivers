@@ -4,6 +4,7 @@
   "package": "net.dadamalda.ocr_extra_drivers.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "UpgradeSolarGeneratorMixin"
   ],
   "client": [
   ],
