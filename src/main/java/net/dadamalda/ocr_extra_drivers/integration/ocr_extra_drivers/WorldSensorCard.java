@@ -18,17 +18,17 @@ public class WorldSensorCard extends AbstractManagedEnvironment {
                 .withComponent("world_sensor", Visibility.Neighbors).withConnector().create());
     }
 
-    @Callback(direct = true, doc = "function():number -- Get the gravity of the world the device is in compared to earth's.")
+    @Callback(doc = "function():number -- Get the gravity of the world the device is in compared to earth's.")
     public Object[] getGravity(final Context context, final Arguments args) {
         return new Object[]{PlanetDataProviders.gather(host.getEnvironmentLevel()).gravity()};
     }
 
-    @Callback(direct = true, doc = "function():boolean -- Get whether the world the device is in has a breathable atmosphere.")
+    @Callback(doc = "function():boolean -- Get whether the world the device is in has a breathable atmosphere.")
     public Object[] hasBreathableAtmosphere(final Context context, final Arguments args) {
         return new Object[]{PlanetDataProviders.gather(host.getEnvironmentLevel()).hasOxygen()};
     }
 
-    @Callback(direct = true, doc = "function():boolean -- Get the temperature in Celsius of the world the device is in.")
+    @Callback(doc = "function():boolean -- Get the temperature in Celsius of the world the device is in.")
     public Object[] getTemperature(final Context context, final Arguments args) {
         return new Object[]{PlanetDataProviders.gather(host.getEnvironmentLevel()).temperature()};
     }
