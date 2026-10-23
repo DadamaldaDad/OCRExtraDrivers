@@ -1,4 +1,4 @@
-package net.dadamalda.ocr_extra_drivers.mixin;
+package net.dadamalda.ocr_extra_drivers.mixin.ocr_extra_drivers;
 
 import li.cil.oc.api.network.EnvironmentHost;
 import li.cil.oc.server.component.UpgradeSolarGenerator;

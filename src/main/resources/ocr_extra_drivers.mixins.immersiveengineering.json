@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.dadamalda.ocr_extra_drivers.mixin.immersiveengineering",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "ClocheBlockEntityMixin"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "overwrites": {
+    "requireAnnotations": true
+  }
+}

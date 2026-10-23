@@ -1,7 +1,7 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "net.dadamalda.ocr_extra_drivers.mixin",
+  "package": "net.dadamalda.ocr_extra_drivers.mixin.ocr_extra_drivers",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "UpgradeSolarGeneratorMixin"

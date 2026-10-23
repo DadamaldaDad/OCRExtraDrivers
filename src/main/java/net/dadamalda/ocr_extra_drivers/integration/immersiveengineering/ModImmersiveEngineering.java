@@ -7,5 +7,13 @@ public class ModImmersiveEngineering {
         Driver.add(new DriverMultiblockBlockEntityMaster());
         Driver.add(new DriverMultiblockBlockEntityDummy());
         Driver.add(new IEMultiblockDrivers.Provider());
+
+        Driver.add(new DriverAccumulator());
+        Driver.add(new DriverPowerMeter());
+        Driver.add(new DriverCloche());
+
+        Driver.add(new DriverAccumulator.Provider());
+        Driver.add(new DriverPowerMeter.Provider());
+        Driver.add(new DriverCloche.Provider());
     }
 }
