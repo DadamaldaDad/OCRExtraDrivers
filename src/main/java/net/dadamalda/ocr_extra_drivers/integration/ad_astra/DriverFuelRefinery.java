@@ -48,13 +48,13 @@ public class DriverFuelRefinery extends DriverSidedBlockEntity {
             this.blockEntity = blockEntity;
         }
 
-        @Callback(doc = "function():number -- The energy stored in the machine's buffer.")
-        public Object[] getEnergy(Context context, Arguments args) {
+        @Callback(doc = "function():number -- Returns the amount of energy stored in the machine's buffer.")
+        public Object[] getEnergyStored(Context context, Arguments args) {
             return new Object[]{blockEntity.getEnergy(Direction.UP).getStoredAmount()};
         }
 
-        @Callback(doc = "function():number -- The size of the machine's energy buffer.")
-        public Object[] getMaxEnergy(Context context, Arguments args) {
+        @Callback(doc = "function():number -- Returns the maximum amount of energy stored in the machine's buffer.")
+        public Object[] getMaxEnergyStored(Context context, Arguments args) {
             return new Object[]{blockEntity.getEnergy(Direction.UP).getCapacity()};
         }
 

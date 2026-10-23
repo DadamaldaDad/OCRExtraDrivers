@@ -48,13 +48,13 @@ public class DriverEtrionicBlastFurnace extends DriverSidedBlockEntity {
             this.blockEntity = blockEntity;
         }
 
-        @Callback(doc = "function():number -- The energy stored in the machine's buffer.")
-        public Object[] getEnergy(Context context, Arguments args) {
+        @Callback(doc = "function():number -- Returns the amount of energy stored in the machine's buffer.")
+        public Object[] getEnergyStored(Context context, Arguments args) {
             return new Object[]{blockEntity.getEnergy(Direction.UP).getStoredAmount()};
         }
 
-        @Callback(doc = "function():number -- The size of the machine's energy buffer.")
-        public Object[] getMaxEnergy(Context context, Arguments args) {
+        @Callback(doc = "function():number -- Returns the maximum amount of energy stored in the machine's buffer.")
+        public Object[] getMaxEnergyStored(Context context, Arguments args) {
             return new Object[]{blockEntity.getEnergy(Direction.UP).getCapacity()};
         }
 
@@ -76,7 +76,7 @@ public class DriverEtrionicBlastFurnace extends DriverSidedBlockEntity {
             };
         }
 
-        @Callback(doc = "function():boolean -- Get the working mode of the etrionic blast furnace")
+        @Callback(doc = "function(mode:string):boolean -- Set the working mode of the etrionic blast furnace")
         public Object[] setMode(Context context, Arguments args) {
             if(!args.isString(0)) return new Object[]{false};
             switch(args.checkString(0)) {
@@ -99,7 +99,7 @@ public class DriverEtrionicBlastFurnace extends DriverSidedBlockEntity {
                         return new Object[]{false};
                     }
                 default:
-                    return new Object[]{false};
+                    throw new IllegalArgumentException("Mode must be either blasting or alloying");
             }
         }
     }

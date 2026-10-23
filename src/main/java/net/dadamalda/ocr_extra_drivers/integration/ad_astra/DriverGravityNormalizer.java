@@ -1,7 +1,6 @@
 package net.dadamalda.ocr_extra_drivers.integration.ad_astra;
 
 import earth.terrarium.adastra.common.blockentities.machines.GravityNormalizerBlockEntity;
-import earth.terrarium.adastra.common.blockentities.machines.OxygenDistributorBlockEntity;
 import earth.terrarium.adastra.common.registry.ModItems;
 import li.cil.oc.api.driver.EnvironmentProvider;
 import li.cil.oc.api.driver.NamedBlock;
@@ -49,13 +48,13 @@ public class DriverGravityNormalizer extends DriverSidedBlockEntity {
             this.blockEntity = blockEntity;
         }
 
-        @Callback(doc = "function():number -- The energy stored in the machine's buffer.")
-        public Object[] getEnergy(Context context, Arguments args) {
+        @Callback(doc = "function():number -- Returns the amount of energy stored in the machine's buffer.")
+        public Object[] getEnergyStored(Context context, Arguments args) {
             return new Object[]{blockEntity.getEnergy(Direction.UP).getStoredAmount()};
         }
 
-        @Callback(doc = "function():number -- The size of the machine's energy buffer.")
-        public Object[] getMaxEnergy(Context context, Arguments args) {
+        @Callback(doc = "function():number -- Returns the maximum amount of energy stored in the machine's buffer.")
+        public Object[] getMaxEnergyStored(Context context, Arguments args) {
             return new Object[]{blockEntity.getEnergy(Direction.UP).getCapacity()};
         }
 
@@ -72,13 +71,16 @@ public class DriverGravityNormalizer extends DriverSidedBlockEntity {
         @Callback(doc = "function(gravity:number):boolean -- Set the target gravity in multiples of earth's.")
         public Object[] setTargetGravity(Context context, Arguments args) {
             float previousGravity = blockEntity.targetGravity();
-            if(args.isDouble(0) && args.checkDouble(0) >= 0 && args.checkDouble(0) <= 20/9.8 && args.checkDouble(0) != previousGravity) {
-                blockEntity.setTargetGravity((float)args.checkDouble(0));
-                blockEntity.setChanged();
-                blockEntity.sync();
-                return new Object[]{true};
-            } else {
+            if(args.isDouble(0) && args.checkDouble(0) >= 0 && args.checkDouble(0) <= 20/9.8) {
+                if(args.checkDouble(0) != previousGravity) {
+                    blockEntity.setTargetGravity((float)args.checkDouble(0));
+                    blockEntity.setChanged();
+                    blockEntity.sync();
+                    return new Object[]{true};
+                }
                 return new Object[]{false};
+            } else {
+                throw new IllegalArgumentException("Gravity must be a number between 0.0 and 2.0");
             }
         }
     }
