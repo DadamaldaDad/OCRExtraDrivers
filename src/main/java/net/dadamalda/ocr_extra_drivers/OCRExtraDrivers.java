@@ -4,11 +4,11 @@ import li.cil.oc.api.Driver;
 import net.dadamalda.ocr_extra_drivers.core.PlanetDataProviders;
 import net.dadamalda.ocr_extra_drivers.init.OEDCreativeModeTabs;
 import net.dadamalda.ocr_extra_drivers.init.OEDItems;
-import net.dadamalda.ocr_extra_drivers.integration.ad_astra.AdAstraPlanetDataProvider;
 import net.dadamalda.ocr_extra_drivers.integration.ad_astra.ModAdAstra;
 import net.dadamalda.ocr_extra_drivers.integration.immersiveengineering.ModImmersiveEngineering;
 import net.dadamalda.ocr_extra_drivers.integration.ocr_extra_drivers.DriverWorldSensorCard;
 import net.dadamalda.ocr_extra_drivers.integration.ocr_extra_drivers.HardcodedPlanetDataProvider;
+import net.dadamalda.ocr_extra_drivers.integration.stellaris.ModStellaris;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
@@ -35,6 +35,8 @@ public class OCRExtraDrivers {
         Driver.add(DriverWorldSensorCard.INSTANCE);
         Driver.add(DriverWorldSensorCard.Provider.INSTANCE);
 
+        if(ModList.get().isLoaded("stellaris"))
+            ModStellaris.initialize();
         if(ModList.get().isLoaded("ad_astra"))
             ModAdAstra.initialize();
         if(ModList.get().isLoaded("immersiveengineering"))
