@@ -133,6 +133,8 @@ dependencies {
     }
 
     compileOnly("maven.modrinth:stellaris:5BraaKfR")
+    compileOnly("maven.modrinth:potentials:EEjnSxLK")
+    compileOnly("maven.modrinth:architectury-api:1IiqEQGl")
     if(run_space_mod == "stellaris") {
         runtimeOnly("maven.modrinth:stellaris:5BraaKfR")
         runtimeOnly("maven.modrinth:potentials:EEjnSxLK")
