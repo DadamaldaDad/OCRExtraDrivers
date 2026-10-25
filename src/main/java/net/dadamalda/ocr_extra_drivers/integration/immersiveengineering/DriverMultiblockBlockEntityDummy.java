@@ -21,7 +21,7 @@ public class DriverMultiblockBlockEntityDummy extends DriverSidedBlockEntity {
             IMultiblockState state = be.getHelper().getState();
             IMultiblockContext<? extends IMultiblockState> context = be.getHelper().getContext();
             if(context == null) return null;
-            return IEMultiblockDrivers.findEnvironment(state, context.getLevel());
+            return IEMultiblockDrivers.findEnvironment(state, context.getLevel(), level);
         } else {
             return null;
         }

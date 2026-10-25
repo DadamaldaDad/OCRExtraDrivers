@@ -18,7 +18,7 @@ public class DriverMultiblockBlockEntityMaster extends DriverSidedBlockEntity {
     public ManagedEnvironment createEnvironment(Level level, BlockPos blockPos, Direction direction) {
         if(level.getBlockEntity(blockPos) instanceof MultiblockBlockEntityMaster<? extends IMultiblockState> be) {
             IMultiblockState state = be.getHelper().getState();
-            return IEMultiblockDrivers.findEnvironment(state, be.getHelper().getContext().getLevel());
+            return IEMultiblockDrivers.findEnvironment(state, be.getHelper().getContext().getLevel(), level);
         } else {
             return null;
         }
