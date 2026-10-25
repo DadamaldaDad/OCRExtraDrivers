@@ -19,6 +19,7 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 
 import java.util.List;
+import java.util.Set;
 
 public class DriverAccumulator extends DriverSidedBlockEntity {
     @Override
@@ -69,7 +70,7 @@ public class DriverAccumulator extends DriverSidedBlockEntity {
     }
 
     public static class Provider implements EnvironmentProvider {
-        private final List<Item> items = List.of(
+        private final Set<Item> items = Set.of(
                 IEBlocks.MetalDevices.CAPACITOR_LV.asItem(),
                 IEBlocks.MetalDevices.CAPACITOR_MV.asItem(),
                 IEBlocks.MetalDevices.CAPACITOR_HV.asItem(),
