@@ -2,6 +2,7 @@ package net.dadamalda.ocr_extra_drivers.integration.ad_astra;
 
 import li.cil.oc.api.Driver;
 import net.dadamalda.ocr_extra_drivers.core.PlanetDataProviders;
+import net.dadamalda.ocr_extra_drivers.core.SatelliteNetwork;
 
 public class ModAdAstra {
     public static void initialize() {
@@ -30,5 +31,6 @@ public class ModAdAstra {
         Driver.add(new DriverCryoFreezer.Provider());
 
         PlanetDataProviders.register(new AdAstraPlanetDataProvider());
+        SatelliteNetwork.registerLinkProvider(new AdAstraSatelliteLinkProvider());
     }
 }

@@ -6,6 +6,7 @@ import net.dadamalda.ocr_extra_drivers.init.OEDCreativeModeTabs;
 import net.dadamalda.ocr_extra_drivers.init.OEDItems;
 import net.dadamalda.ocr_extra_drivers.integration.ad_astra.ModAdAstra;
 import net.dadamalda.ocr_extra_drivers.integration.immersiveengineering.ModImmersiveEngineering;
+import net.dadamalda.ocr_extra_drivers.integration.ocr_extra_drivers.DriverSatelliteCard;
 import net.dadamalda.ocr_extra_drivers.integration.ocr_extra_drivers.DriverWorldSensorCard;
 import net.dadamalda.ocr_extra_drivers.integration.ocr_extra_drivers.HardcodedPlanetDataProvider;
 import net.dadamalda.ocr_extra_drivers.integration.stellaris.ModStellaris;
@@ -34,6 +35,8 @@ public class OCRExtraDrivers {
     private void commonSetup(final FMLCommonSetupEvent event) {
         Driver.add(DriverWorldSensorCard.INSTANCE);
         Driver.add(DriverWorldSensorCard.Provider.INSTANCE);
+        Driver.add(DriverSatelliteCard.INSTANCE);
+        Driver.add(DriverSatelliteCard.Provider.INSTANCE);
 
         if(ModList.get().isLoaded("stellaris"))
             ModStellaris.initialize();

@@ -11,4 +11,5 @@ public class OEDItems {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.createItems(OCRExtraDrivers.MODID);
 
     public static final DeferredHolder<Item, BasicTieredComponentItem> WORLD_SENSOR_CARD = ITEMS.register("worldsensorcard", () -> new BasicTieredComponentItem(new Item.Properties(), "worldsensorcard"));
+    public static final DeferredHolder<Item, BasicTieredComponentItem> SATELLITE_CARD = ITEMS.register("satellitecard", () -> new BasicTieredComponentItem(new Item.Properties(), "satellitecard"));
 }

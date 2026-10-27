@@ -18,6 +18,7 @@ public class OEDCreativeModeTabs {
                     .icon(() -> new ItemStack(OEDItems.WORLD_SENSOR_CARD))
                     .displayItems((params, output) -> {
                         output.accept(OEDItems.WORLD_SENSOR_CARD.get());
+                        output.accept(OEDItems.SATELLITE_CARD.get());
                     })
                     .build());
 }
