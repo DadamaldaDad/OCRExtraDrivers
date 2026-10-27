@@ -1,4 +1,6 @@
 {
   "itemGroup.ocr_extra_drivers": "Extra Drivers",
-  "item.ocr_extra_drivers.worldsensorcard": "World Sensor Card"
+  "item.ocr_extra_drivers.worldsensorcard": "World Sensor Card",
+  "item.oc.satellitecard": "Satellite Card",
+  "oc:tooltip.satellitecard": "Allows wireless sending of messages from ground to orbit and vice versa with unlimited range."
 }

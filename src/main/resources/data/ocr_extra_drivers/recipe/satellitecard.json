@@ -1,0 +1,45 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:or",
+      "values": [
+        {
+          "type": "neoforge:mod_loaded",
+          "modid": "ad_astra"
+        },
+        {
+          "type": "neoforge:mod_loaded",
+          "modid": "stellaris"
+        }
+      ]
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "opencomputers:card"
+    },
+    "C": {
+      "item": "opencomputers:chip2"
+    },
+    "e": {
+      "tag": "c:ender_pearls"
+    },
+    "t": {
+      "item": "minecraft:iron_trapdoor"
+    },
+    "i": {
+      "item": "minecraft:redstone_torch"
+    }
+  },
+  "pattern": [
+    "  i",
+    "eCt",
+    " B "
+  ],
+  "result": {
+    "count": 1,
+    "id": "ocr_extra_drivers:satellitecard"
+  }
+}
