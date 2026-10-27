@@ -23,6 +23,7 @@ public class SatelliteCard extends NetworkCard implements SatelliteNetwork.Satel
             create();
 
     private final int TICKS_BETWEEN_CHECKS = 40;
+    private final int SATELLITE_DISTANCE = 512;
 
     private boolean canSeeAbove = false;
     private boolean canSeeBelow = false;
@@ -57,7 +58,7 @@ public class SatelliteCard extends NetworkCard implements SatelliteNetwork.Satel
                 (sentFrom == SatelliteNetwork.SatelliteDirection.ABOVE && canSeeAbove) ||
                         (sentFrom == SatelliteNetwork.SatelliteDirection.BELOW && canSeeBelow)
         ) {
-            receivePacket(packet, 500.0, host);
+            receivePacket(packet, SATELLITE_DISTANCE, host);
         }
     }
 
@@ -72,7 +73,7 @@ public class SatelliteCard extends NetworkCard implements SatelliteNetwork.Satel
     }
 
     private void doTransmit(Packet packet) {
-        double cost = packet.size() / 32.0 + Settings.get().wirelessCostPerRange()[Tier.Two()] * 500.0;
+        double cost = Settings.get().wirelessCostPerRange()[Tier.Two()] * SATELLITE_DISTANCE;
         if(!(node() instanceof Connector connector)) return;
         if(!Settings.get().ignorePower() && !connector.tryChangeBuffer(-cost)) return;
         MinecraftServer server = host.getEnvironmentLevel().getServer();
@@ -132,7 +133,7 @@ public class SatelliteCard extends NetworkCard implements SatelliteNetwork.Satel
                 DeviceAttribute.Product, "D1SHS4T",
                 DeviceAttribute.Capacity, Integer.toString(Settings.get().maxNetworkPacketSize()),
                 DeviceAttribute.Size, Integer.toString(maxOpenPorts()),
-                DeviceAttribute.Width, "500"
+                DeviceAttribute.Width, Integer.toString(SATELLITE_DISTANCE)
         );
     }
 
