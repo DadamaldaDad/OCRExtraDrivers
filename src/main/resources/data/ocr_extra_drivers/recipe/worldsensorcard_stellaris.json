@@ -1,0 +1,22 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "stellaris"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "fC",
+    " c"
+  ],
+  "key": {
+    "f": "stellaris:engine_fan",
+    "C": "opencomputers:chip2",
+    "c": "opencomputerx:card"
+  },
+  "result": {
+    "id": "ocr_extra_drivers:worldsensorcard"
+  }
+}
