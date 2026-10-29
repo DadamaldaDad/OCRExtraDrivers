@@ -2,6 +2,7 @@ package net.dadamalda.ocr_extra_drivers.integration.stellaris;
 
 import li.cil.oc.api.Driver;
 import net.dadamalda.ocr_extra_drivers.core.PlanetDataProviders;
+import net.dadamalda.ocr_extra_drivers.core.SatelliteNetwork;
 
 public class ModStellaris {
     public static void initialize() {
@@ -26,5 +27,6 @@ public class ModStellaris {
         Driver.add(new DriverPowerBank.Provider());
 
         PlanetDataProviders.register(new StellarisPlanetDataProvider());
+        SatelliteNetwork.registerLinkProvider(new StellarisSatelliteLinkProvider());
     }
 }
