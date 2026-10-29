@@ -5,6 +5,7 @@ import li.cil.oc.api.network.EnvironmentHost;
 import li.cil.oc.api.network.ManagedEnvironment;
 import li.cil.oc.api.prefab.DriverItem;
 import li.cil.oc.common.Slot;
+import li.cil.oc.common.Tier;
 import net.dadamalda.ocr_extra_drivers.init.OEDItems;
 import net.minecraft.world.item.ItemStack;
 
@@ -25,6 +26,11 @@ public final class DriverSatelliteCard extends DriverItem {
     @Override
     public String slot(ItemStack itemStack) {
         return Slot.Card();
+    }
+
+    @Override
+    public int tier(ItemStack stack) {
+        return Tier.Two();
     }
 
     public static class Provider implements EnvironmentProvider {
