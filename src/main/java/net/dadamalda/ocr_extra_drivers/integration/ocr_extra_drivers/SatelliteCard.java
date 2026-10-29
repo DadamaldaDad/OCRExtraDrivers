@@ -2,7 +2,7 @@ package net.dadamalda.ocr_extra_drivers.integration.ocr_extra_drivers;
 
 import li.cil.oc.Settings;
 import li.cil.oc.api.Network;
-import li.cil.oc.api.internal.Tiered;
+import li.cil.oc.api.internal.*;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.*;
@@ -37,13 +37,14 @@ public class SatelliteCard extends NetworkCard implements SatelliteNetwork.Satel
     }
 
     private void checkLineOfSight() {
+        boolean isBlock = host instanceof Case || host instanceof Server || host instanceof Robot || host instanceof Microcontroller;
         if(!dimensionsAbove.isEmpty()) {
             canSeeAbove = SatelliteNetwork.canSeeAbove(host.getEnvironmentLevel(),
-                    host.xPosition(), host.yPosition(), host.zPosition());
+                    host.xPosition(), host.yPosition(), host.zPosition(), isBlock);
         }
         if(!dimensionsBelow.isEmpty()) {
             canSeeBelow = SatelliteNetwork.canSeeBelow(host.getEnvironmentLevel(),
-                    host.xPosition(), host.yPosition(), host.zPosition());
+                    host.xPosition(), host.yPosition(), host.zPosition(), isBlock);
         }
         MinecraftServer server = host.getEnvironmentLevel().getServer();
         if(server == null) return;

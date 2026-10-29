@@ -20,10 +20,10 @@ public class SatelliteNetwork {
 
     private static final double[][] raycastOffsets = {
             {0.0, 0.0},
-            {-0.4, -0.4},
-            {0.4, -0.4},
-            {-0.4, 0.4},
-            {0.4, 0.4}
+            {-0.3, -0.3},
+            {0.3, -0.3},
+            {-0.3, 0.3},
+            {0.3, 0.3}
     };
 
     private static final List<SatelliteLinkProvider> linkProviders = new ArrayList<>();
@@ -65,14 +65,12 @@ public class SatelliteNetwork {
         }
     }
 
-    public static boolean canSeeAbove(Level level, double x, double y, double z) {
+    public static boolean canSeeAbove(Level level, double x, double y, double z, boolean isBlock) {
         for (double[] offset : raycastOffsets) {
-            ClipContext context = new ClipContext(
-                    new Vec3(x+offset[0], y+0.51, z+offset[1]),
+            ClipContext context = new SatelliteClipContext(
+                    new Vec3(x+offset[0], y+(isBlock ? 0 : 0.5), z+offset[1]),
                     new Vec3(x+offset[0], level.getMaxBuildHeight()+1, z+offset[1]),
-                    ClipContext.Block.COLLIDER,
-                    ClipContext.Fluid.ANY,
-                    CollisionContext.empty()
+                    isBlock
             );
             BlockHitResult hit = level.clip(context);
             if(hit.getType() == HitResult.Type.MISS) {
@@ -82,14 +80,12 @@ public class SatelliteNetwork {
         return false;
     }
 
-    public static boolean canSeeBelow(Level level, double x, double y, double z) {
+    public static boolean canSeeBelow(Level level, double x, double y, double z, boolean isBlock) {
         for (double[] offset : raycastOffsets) {
-            ClipContext context = new ClipContext(
-                    new Vec3(x+offset[0], y-0.51, z+offset[1]),
+            ClipContext context = new SatelliteClipContext(
+                    new Vec3(x+offset[0], y+(isBlock ? 0 : 0.5), z+offset[1]),
                     new Vec3(x+offset[0], level.getMinBuildHeight(), z+offset[1]),
-                    ClipContext.Block.COLLIDER,
-                    ClipContext.Fluid.ANY,
-                    CollisionContext.empty()
+                    isBlock
             );
             BlockHitResult hit = level.clip(context);
             if(hit.getType() == HitResult.Type.MISS) {
