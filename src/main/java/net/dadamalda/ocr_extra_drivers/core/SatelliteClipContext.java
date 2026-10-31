@@ -10,21 +10,23 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class SatelliteClipContext extends ClipContext {
-    private final boolean isBlock;
-    public SatelliteClipContext(Vec3 from, Vec3 to, boolean isBlock) {
+    private final BlockPos blockPos;
+
+    public SatelliteClipContext(Vec3 from, Vec3 to, @Nullable BlockPos blockPos) {
         super(from, to, Block.COLLIDER, Fluid.ANY, CollisionContext.empty());
-        this.isBlock = isBlock;
+        this.blockPos = blockPos;
     }
 
-    public boolean isBlock() {
-        return this.isBlock;
+    public @Nullable BlockPos getBlockPos() {
+        return this.blockPos;
     }
 
     @Override
     public @NotNull VoxelShape getBlockShape(@NotNull BlockState blockState, @NotNull BlockGetter level, @NotNull BlockPos pos) {
-        if(this.isBlock && pos.equals(BlockPos.containing(getFrom()))) return Shapes.empty();
+        if(pos.equals(this.blockPos)) return Shapes.empty();
         if(blockState.is(OEDTags.TRANSPARENT_TO_SATELLITE)) return Shapes.empty();
         return super.getBlockShape(blockState, level, pos);
     }

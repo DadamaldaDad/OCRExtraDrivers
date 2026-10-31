@@ -1,17 +1,16 @@
 package net.dadamalda.ocr_extra_drivers.core;
 
+import dev.ryanhcode.sable.companion.SableCompanion;
+import dev.ryanhcode.sable.companion.SubLevelAccess;
+import dev.ryanhcode.sable.companion.math.Pose3dc;
 import li.cil.oc.api.network.Packet;
-import net.minecraft.client.particle.Particle;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.CollisionContext;
 
 import java.util.*;
 
@@ -24,6 +23,18 @@ public class SatelliteNetwork {
             {0.3, -0.3},
             {-0.3, 0.3},
             {0.3, 0.3}
+    };
+
+    private static final double[][] sublevelRaycastOffsets = {
+            {0.0, 0.0, 0.0},
+            {-0.3, -0.3, -0.3},
+            {-0.3, -0.3, 0.3},
+            {-0.3, 0.3, -0.3},
+            {-0.3, 0.3, 0.3},
+            {0.3, -0.3, -0.3},
+            {0.3, -0.3, 0.3},
+            {0.3, 0.3, -0.3},
+            {0.3, 0.3, 0.3}
     };
 
     private static final List<SatelliteLinkProvider> linkProviders = new ArrayList<>();
@@ -65,12 +76,15 @@ public class SatelliteNetwork {
         }
     }
 
-    public static boolean canSeeAbove(Level level, double x, double y, double z, boolean isBlock) {
+    public static boolean canSee(Level level, Vec3 pos, boolean isBlock, SatelliteDirection direction) {
+        if(isBlock && SableCompanion.INSTANCE.isInPlotGrid(level, pos)) {
+            return canSeeWithSublevels(level, pos, direction);
+        }
         for (double[] offset : raycastOffsets) {
             ClipContext context = new SatelliteClipContext(
-                    new Vec3(x+offset[0], y+(isBlock ? 0 : 0.5), z+offset[1]),
-                    new Vec3(x+offset[0], level.getMaxBuildHeight()+1, z+offset[1]),
-                    isBlock
+                    new Vec3(pos.x+offset[0], pos.y+(isBlock ? 0 : 0.5), pos.z+offset[1]),
+                    new Vec3(pos.x+offset[0], direction == SatelliteDirection.ABOVE ? level.getMaxBuildHeight()+1 : level.getMinBuildHeight(), pos.z+offset[1]),
+                    isBlock ? BlockPos.containing(pos) : null
             );
             BlockHitResult hit = level.clip(context);
             if(hit.getType() == HitResult.Type.MISS) {
@@ -80,12 +94,17 @@ public class SatelliteNetwork {
         return false;
     }
 
-    public static boolean canSeeBelow(Level level, double x, double y, double z, boolean isBlock) {
-        for (double[] offset : raycastOffsets) {
+    private static boolean canSeeWithSublevels(Level level, Vec3 pos, SatelliteDirection direction) {
+        SubLevelAccess sublevel = SableCompanion.INSTANCE.getContaining(level, pos.x, pos.z);
+        if(sublevel == null) return false;
+        Pose3dc pose = sublevel.logicalPose();
+        for (double[] offset : sublevelRaycastOffsets) {
+            Vec3 startLocal = new Vec3(pos.x+offset[0], pos.y+offset[1], pos.z+offset[2]);
+            Vec3 start = pose.transformPosition(startLocal);
             ClipContext context = new SatelliteClipContext(
-                    new Vec3(x+offset[0], y+(isBlock ? 0 : 0.5), z+offset[1]),
-                    new Vec3(x+offset[0], level.getMinBuildHeight(), z+offset[1]),
-                    isBlock
+                    start,
+                    new Vec3(start.x, direction == SatelliteDirection.ABOVE ? level.getMaxBuildHeight()+1 : level.getMinBuildHeight(), start.z),
+                    BlockPos.containing(pos)
             );
             BlockHitResult hit = level.clip(context);
             if(hit.getType() == HitResult.Type.MISS) {

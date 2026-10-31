@@ -2,7 +2,6 @@ package net.dadamalda.ocr_extra_drivers.mixin.ocr_extra_drivers;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import li.cil.oc.Settings;
-import li.cil.oc.api.network.Component;
 import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.Packet;
 import li.cil.oc.common.InventorySlots;
@@ -18,7 +17,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import org.spongepowered.asm.mixin.Final;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -51,13 +50,6 @@ public abstract class RelayBlockEntityMixin implements SatelliteNetwork.Satellit
     public abstract boolean isRepeater();
 
     @Shadow
-    public abstract Node node();
-
-    @Shadow
-    @Final
-    private Component[] componentNodes;
-
-    @Shadow
     public abstract ItemStack getItem(int slot);
 
     @Unique
@@ -78,14 +70,17 @@ public abstract class RelayBlockEntityMixin implements SatelliteNetwork.Satellit
     @Unique
     private List<ResourceLocation> OCRExtraDrivers$dimensionsBelow;
 
-    private void checkLineOfSight() {
+    @Unique
+    private void OCRExtraDrivers$checkLineOfSight() {
         if(!OCRExtraDrivers$dimensionsAbove.isEmpty()) {
-            OCRExtraDrivers$canSeeAbove = SatelliteNetwork.canSeeAbove(getEnvironmentLevel(),
-                    xPosition(), yPosition(), zPosition(), true);
+            OCRExtraDrivers$canSeeAbove = SatelliteNetwork.canSee(getEnvironmentLevel(),
+                    new Vec3(xPosition(), yPosition(), zPosition()),
+                    true, SatelliteNetwork.SatelliteDirection.ABOVE);
         }
         if(!OCRExtraDrivers$dimensionsBelow.isEmpty()) {
-            OCRExtraDrivers$canSeeBelow = SatelliteNetwork.canSeeBelow(getEnvironmentLevel(),
-                    xPosition(), yPosition(), zPosition(), true);
+            OCRExtraDrivers$canSeeBelow = SatelliteNetwork.canSee(getEnvironmentLevel(),
+                    new Vec3(xPosition(), yPosition(), zPosition()),
+                    true, SatelliteNetwork.SatelliteDirection.BELOW);
         }
         MinecraftServer server = getEnvironmentLevel().getServer();
         if(server == null) return;
@@ -96,7 +91,7 @@ public abstract class RelayBlockEntityMixin implements SatelliteNetwork.Satellit
     public void receiveSatellitePacket(Packet packet, SatelliteNetwork.SatelliteDirection sentFrom) {
         MinecraftServer server = getEnvironmentLevel().getServer();
         if(server == null) return;
-        if(OCRExtraDrivers$lastCheckedTick+TICKS_BETWEEN_CHECKS < server.getTickCount()) checkLineOfSight();
+        if(OCRExtraDrivers$lastCheckedTick+TICKS_BETWEEN_CHECKS < server.getTickCount()) OCRExtraDrivers$checkLineOfSight();
         if(
                 (sentFrom == SatelliteNetwork.SatelliteDirection.ABOVE && OCRExtraDrivers$canSeeAbove) ||
                         (sentFrom == SatelliteNetwork.SatelliteDirection.BELOW && OCRExtraDrivers$canSeeBelow)
@@ -114,7 +109,7 @@ public abstract class RelayBlockEntityMixin implements SatelliteNetwork.Satellit
 
         MinecraftServer server = getEnvironmentLevel().getServer();
         if(server == null) return;
-        if(OCRExtraDrivers$lastCheckedTick+TICKS_BETWEEN_CHECKS < server.getTickCount()) checkLineOfSight();
+        if(OCRExtraDrivers$lastCheckedTick+TICKS_BETWEEN_CHECKS < server.getTickCount()) OCRExtraDrivers$checkLineOfSight();
         if(OCRExtraDrivers$canSeeAbove) {
             for(ResourceLocation dimension : OCRExtraDrivers$dimensionsAbove) {
                 SatelliteNetwork.receivePacketInDimension(packet, dimension, SatelliteNetwork.SatelliteDirection.BELOW);

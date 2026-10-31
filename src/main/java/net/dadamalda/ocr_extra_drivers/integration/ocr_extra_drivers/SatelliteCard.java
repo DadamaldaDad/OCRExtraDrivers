@@ -11,6 +11,7 @@ import li.cil.oc.server.component.NetworkCard;
 import net.dadamalda.ocr_extra_drivers.core.SatelliteNetwork;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
 import java.util.Map;
@@ -39,12 +40,14 @@ public class SatelliteCard extends NetworkCard implements SatelliteNetwork.Satel
     private void checkLineOfSight() {
         boolean isBlock = host instanceof Case || host instanceof Server || host instanceof Robot || host instanceof Microcontroller;
         if(!dimensionsAbove.isEmpty()) {
-            canSeeAbove = SatelliteNetwork.canSeeAbove(host.getEnvironmentLevel(),
-                    host.xPosition(), host.yPosition(), host.zPosition(), isBlock);
+            canSeeAbove = SatelliteNetwork.canSee(host.getEnvironmentLevel(),
+                    new Vec3(host.xPosition(), host.yPosition(), host.zPosition()),
+                    isBlock, SatelliteNetwork.SatelliteDirection.ABOVE);
         }
         if(!dimensionsBelow.isEmpty()) {
-            canSeeBelow = SatelliteNetwork.canSeeBelow(host.getEnvironmentLevel(),
-                    host.xPosition(), host.yPosition(), host.zPosition(), isBlock);
+            canSeeBelow = SatelliteNetwork.canSee(host.getEnvironmentLevel(),
+                    new Vec3(host.xPosition(), host.yPosition(), host.zPosition()),
+                    isBlock, SatelliteNetwork.SatelliteDirection.BELOW);
         }
         MinecraftServer server = host.getEnvironmentLevel().getServer();
         if(server == null) return;
