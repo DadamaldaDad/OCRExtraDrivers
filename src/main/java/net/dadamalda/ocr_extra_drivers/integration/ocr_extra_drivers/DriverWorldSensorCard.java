@@ -3,12 +3,12 @@ package net.dadamalda.ocr_extra_drivers.integration.ocr_extra_drivers;
 import li.cil.oc.api.driver.EnvironmentProvider;
 import li.cil.oc.api.network.EnvironmentHost;
 import li.cil.oc.api.network.ManagedEnvironment;
-import li.cil.oc.api.prefab.DriverItem;
 import li.cil.oc.common.Slot;
+import li.cil.oc.integration.opencomputers.Item;
 import net.dadamalda.ocr_extra_drivers.init.OEDItems;
 import net.minecraft.world.item.ItemStack;
 
-public final class DriverWorldSensorCard extends DriverItem {
+public final class DriverWorldSensorCard implements Item {
     public static final DriverWorldSensorCard INSTANCE = new DriverWorldSensorCard();
 
     @Override

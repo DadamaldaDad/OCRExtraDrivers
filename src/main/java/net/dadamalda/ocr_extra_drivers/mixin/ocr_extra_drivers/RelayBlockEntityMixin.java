@@ -12,12 +12,14 @@ import li.cil.oc.internal.scalalib.Function1;
 import li.cil.oc.internal.scalalib.Option;
 import net.dadamalda.ocr_extra_drivers.core.SatelliteNetwork;
 import net.dadamalda.ocr_extra_drivers.init.OEDItems;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -26,25 +28,32 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Objects;
 
 @Mixin(Relay.class)
-public abstract class RelayBlockEntityMixin implements SatelliteNetwork.SatelliteNode {
-    @Shadow
-    public abstract Level getEnvironmentLevel();
+public abstract class RelayBlockEntityMixin extends BlockEntity implements SatelliteNetwork.SatelliteNode {
+    public RelayBlockEntityMixin(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
+        super(type, pos, blockState);
+    }
 
-    @Shadow
-    public abstract double xPosition();
+    @Unique
+    private static final Method OCRExtraDrivers$enqueuePacket = OCRExtraDrivers$findEnqueuePacket();
 
-    @Shadow
-    public abstract double yPosition();
-
-    @Shadow
-    public abstract double zPosition();
-
-    @Shadow
-    public abstract boolean tryEnqueuePacket(Option<Direction> sourceSide, Packet packet);
+    @Unique
+    private static Method OCRExtraDrivers$findEnqueuePacket() {
+        try {
+            return Relay.class.getMethod("tryEnqueuePacket", Option.class, Packet.class);
+        } catch (NoSuchMethodException e) {
+            try {
+                return Relay.class.getMethod("tryEnqueuePacketJava", Option.class, Packet.class);
+            } catch (NoSuchMethodException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+    }
 
     @Shadow
     public abstract boolean isRepeater();
@@ -73,30 +82,36 @@ public abstract class RelayBlockEntityMixin implements SatelliteNetwork.Satellit
     @Unique
     private void OCRExtraDrivers$checkLineOfSight() {
         if(!OCRExtraDrivers$dimensionsAbove.isEmpty()) {
-            OCRExtraDrivers$canSeeAbove = SatelliteNetwork.canSee(getEnvironmentLevel(),
-                    new Vec3(xPosition(), yPosition(), zPosition()),
+            OCRExtraDrivers$canSeeAbove = SatelliteNetwork.canSee(level,
+                    worldPosition.getCenter(),
                     true, SatelliteNetwork.SatelliteDirection.ABOVE);
         }
         if(!OCRExtraDrivers$dimensionsBelow.isEmpty()) {
-            OCRExtraDrivers$canSeeBelow = SatelliteNetwork.canSee(getEnvironmentLevel(),
-                    new Vec3(xPosition(), yPosition(), zPosition()),
+            OCRExtraDrivers$canSeeBelow = SatelliteNetwork.canSee(level,
+                    worldPosition.getCenter(),
                     true, SatelliteNetwork.SatelliteDirection.BELOW);
         }
-        MinecraftServer server = getEnvironmentLevel().getServer();
+        if(level == null) return;
+        MinecraftServer server = level.getServer();
         if(server == null) return;
         OCRExtraDrivers$lastCheckedTick = server.getTickCount();
     }
 
     @Override
     public void receiveSatellitePacket(Packet packet, SatelliteNetwork.SatelliteDirection sentFrom) {
-        MinecraftServer server = getEnvironmentLevel().getServer();
+        if(level == null) return;
+        MinecraftServer server = level.getServer();
         if(server == null) return;
         if(OCRExtraDrivers$lastCheckedTick+TICKS_BETWEEN_CHECKS < server.getTickCount()) OCRExtraDrivers$checkLineOfSight();
         if(
                 (sentFrom == SatelliteNetwork.SatelliteDirection.ABOVE && OCRExtraDrivers$canSeeAbove) ||
                         (sentFrom == SatelliteNetwork.SatelliteDirection.BELOW && OCRExtraDrivers$canSeeBelow)
         ) {
-            tryEnqueuePacket(Option.empty(), packet);
+            try {
+                OCRExtraDrivers$enqueuePacket.invoke(this, Option.empty(), packet);
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -106,8 +121,8 @@ public abstract class RelayBlockEntityMixin implements SatelliteNetwork.Satellit
         if(!sourceSide.isDefined() && !isRepeater()) return;
         double cost = Settings.get().wirelessCostPerRange()[Tier.Two()] * SATELLITE_DISTANCE;
         if(!Settings.get().ignorePower() && !tryChangeBuffer.apply(-cost)) return;
-
-        MinecraftServer server = getEnvironmentLevel().getServer();
+        if(level == null) return;
+        MinecraftServer server = level.getServer();
         if(server == null) return;
         if(OCRExtraDrivers$lastCheckedTick+TICKS_BETWEEN_CHECKS < server.getTickCount()) OCRExtraDrivers$checkLineOfSight();
         if(OCRExtraDrivers$canSeeAbove) {
@@ -124,23 +139,20 @@ public abstract class RelayBlockEntityMixin implements SatelliteNetwork.Satellit
 
     @Inject(method = "updateLimits", at = @At("RETURN"))
     private void updateLimits(int slot, ItemStack stack, CallbackInfo ci) {
-        // DriverItem driver = Driver.driverFor(stack);
-        // if(!Objects.equals(driver.slot(stack), Slot.Card())) return;
-        if(getEnvironmentLevel() == null) return;
+        if(level == null) return;
         if(!stack.is(OEDItems.SATELLITE_CARD)) return;
         OCRExtraDrivers$hasSatelliteCard = true;
-        SatelliteNetwork.add(this, getEnvironmentLevel().dimension().location());
-        OCRExtraDrivers$dimensionsAbove = SatelliteNetwork.getDimensionsAbove(getEnvironmentLevel());
-        OCRExtraDrivers$dimensionsBelow = SatelliteNetwork.getDimensionsBelow(getEnvironmentLevel());
+        SatelliteNetwork.add(this, level.dimension().location());
+        OCRExtraDrivers$dimensionsAbove = SatelliteNetwork.getDimensionsAbove(level);
+        OCRExtraDrivers$dimensionsBelow = SatelliteNetwork.getDimensionsBelow(level);
     }
 
     @Inject(method = "onItemRemoved", at = @At("TAIL"))
     private void onItemRemoved(int slot, ItemStack stack, CallbackInfo ci) {
-        // DriverItem driver = Driver.driverFor(stack);
-        // if(!Objects.equals(driver.slot(stack), Slot.Card())) return;
         if(stack.is(OEDItems.SATELLITE_CARD)) return;
         OCRExtraDrivers$hasSatelliteCard = false;
-        SatelliteNetwork.remove(this, getEnvironmentLevel().dimension().location());
+        if(level == null) return;
+        SatelliteNetwork.remove(this, level.dimension().location());
     }
 
     @Inject(method = "canPlaceItem", at = @At("RETURN"), cancellable = true)
@@ -154,10 +166,11 @@ public abstract class RelayBlockEntityMixin implements SatelliteNetwork.Satellit
     @Inject(method = "onConnect", at = @At("RETURN"))
     private void onConnect(Node node, CallbackInfo ci) {
         if(getItem(3).is(OEDItems.SATELLITE_CARD)) {
+            if(level == null) return;
             OCRExtraDrivers$hasSatelliteCard = true;
-            SatelliteNetwork.add(this, getEnvironmentLevel().dimension().location());
-            OCRExtraDrivers$dimensionsAbove = SatelliteNetwork.getDimensionsAbove(getEnvironmentLevel());
-            OCRExtraDrivers$dimensionsBelow = SatelliteNetwork.getDimensionsBelow(getEnvironmentLevel());
+            SatelliteNetwork.add(this, level.dimension().location());
+            OCRExtraDrivers$dimensionsAbove = SatelliteNetwork.getDimensionsAbove(level);
+            OCRExtraDrivers$dimensionsBelow = SatelliteNetwork.getDimensionsBelow(level);
         }
     }
 }
