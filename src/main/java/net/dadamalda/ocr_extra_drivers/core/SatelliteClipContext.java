@@ -12,7 +12,17 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 public class SatelliteClipContext extends ClipContext {
+    private static final List<SatelliteCollisionProvider> PROVIDERS = new ArrayList<>();
+
+    public static void registerCollisionProvider(SatelliteCollisionProvider provider) {
+        PROVIDERS.addFirst(provider);
+    }
+
     private final BlockPos blockPos;
 
     public SatelliteClipContext(Vec3 from, Vec3 to, @Nullable BlockPos blockPos) {
@@ -28,6 +38,10 @@ public class SatelliteClipContext extends ClipContext {
     public @NotNull VoxelShape getBlockShape(@NotNull BlockState blockState, @NotNull BlockGetter level, @NotNull BlockPos pos) {
         if(pos.equals(this.blockPos)) return Shapes.empty();
         if(blockState.is(OEDTags.TRANSPARENT_TO_SATELLITE)) return Shapes.empty();
+        for(SatelliteCollisionProvider provider : PROVIDERS) {
+            Optional<VoxelShape> shape = provider.getShape(blockState, level, pos);
+            if(shape.isPresent()) return shape.get();
+        }
         return super.getBlockShape(blockState, level, pos);
     }
 }

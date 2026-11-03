@@ -153,6 +153,9 @@ dependencies {
 
     implementation("maven.modrinth:immersiveengineering:uNRARSH2")
 
+    implementation("maven.modrinth:cb-multipart:mhteXGK9")
+    implementation("maven.modrinth:codechicken-lib:vLDGhjNJ")
+
     jarJar(api("dev.ryanhcode.sable-companion:sable-companion-common-1.21.1:[${project.sable_companion_version},)")) {
         version {
             prefer(project.sable_companion_version)

@@ -5,6 +5,7 @@ import net.dadamalda.ocr_extra_drivers.core.PlanetDataProviders;
 import net.dadamalda.ocr_extra_drivers.init.OEDCreativeModeTabs;
 import net.dadamalda.ocr_extra_drivers.init.OEDItems;
 import net.dadamalda.ocr_extra_drivers.integration.ad_astra.ModAdAstra;
+import net.dadamalda.ocr_extra_drivers.integration.cb_multipart.ModCBMultipart;
 import net.dadamalda.ocr_extra_drivers.integration.immersiveengineering.ModImmersiveEngineering;
 import net.dadamalda.ocr_extra_drivers.integration.ocr_extra_drivers.DriverSatelliteCard;
 import net.dadamalda.ocr_extra_drivers.integration.ocr_extra_drivers.DriverWorldSensorCard;
@@ -44,6 +45,8 @@ public class OCRExtraDrivers {
             ModAdAstra.initialize();
         if(ModList.get().isLoaded("immersiveengineering"))
             ModImmersiveEngineering.initialize();
+        if(ModList.get().isLoaded("cb_multipart"))
+            ModCBMultipart.initialize();
 
         PlanetDataProviders.register(new HardcodedPlanetDataProvider());
     }
