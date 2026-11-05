@@ -15,7 +15,7 @@ public class OEDCreativeModeTabs {
     public static final Supplier<CreativeModeTab> TAB = CREATIVE_MODE_TABS.register("tab", () ->
             CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup.ocr_extra_drivers"))
-                    .icon(() -> new ItemStack(OEDItems.WORLD_SENSOR_CARD))
+                    .icon(() -> new ItemStack(OEDItems.SATELLITE_CARD))
                     .displayItems((params, output) -> {
                         output.accept(OEDItems.WORLD_SENSOR_CARD.get());
                         output.accept(OEDItems.SATELLITE_CARD.get());
