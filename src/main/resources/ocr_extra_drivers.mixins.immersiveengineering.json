@@ -4,7 +4,8 @@
   "package": "net.dadamalda.ocr_extra_drivers.mixin.immersiveengineering",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "ClocheBlockEntityMixin"
+    "ClocheBlockEntityMixin",
+    "SawmillProcessMixin"
   ],
   "client": [
   ],
