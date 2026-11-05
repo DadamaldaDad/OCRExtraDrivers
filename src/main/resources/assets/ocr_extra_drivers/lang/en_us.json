@@ -1,4 +1,5 @@
 {
+  "gui.ocr_extra_drivers.manual_tab": "OCR Extra Drivers",
   "itemGroup.ocr_extra_drivers": "Extra Drivers",
   "item.ocr_extra_drivers.worldsensorcard": "World Sensor Card",
   "item.oc.satellitecard": "Satellite Card",

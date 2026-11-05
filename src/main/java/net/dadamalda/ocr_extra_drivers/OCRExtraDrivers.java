@@ -1,6 +1,9 @@
 package net.dadamalda.ocr_extra_drivers;
 
 import li.cil.oc.api.Driver;
+import li.cil.oc.api.Manual;
+import li.cil.oc.api.prefab.ItemStackTabIconRenderer;
+import li.cil.oc.api.prefab.SpriteTabIconRenderer;
 import net.dadamalda.ocr_extra_drivers.core.PlanetDataProviders;
 import net.dadamalda.ocr_extra_drivers.init.OEDCreativeModeTabs;
 import net.dadamalda.ocr_extra_drivers.init.OEDItems;
@@ -10,11 +13,15 @@ import net.dadamalda.ocr_extra_drivers.integration.immersiveengineering.ModImmer
 import net.dadamalda.ocr_extra_drivers.integration.ocr_extra_drivers.DriverSatelliteCard;
 import net.dadamalda.ocr_extra_drivers.integration.ocr_extra_drivers.DriverWorldSensorCard;
 import net.dadamalda.ocr_extra_drivers.integration.ocr_extra_drivers.HardcodedPlanetDataProvider;
+import net.dadamalda.ocr_extra_drivers.integration.ocr_extra_drivers.OEDPathProvider;
 import net.dadamalda.ocr_extra_drivers.integration.stellaris.ModStellaris;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 
 // The value here should match an entry in the META-INF/neoforge.mods.toml file
@@ -28,6 +35,7 @@ public class OCRExtraDrivers {
     public OCRExtraDrivers(IEventBus modEventBus, ModContainer modContainer) {
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
+        modEventBus.addListener(this::clientSetup);
 
         OEDItems.ITEMS.register(modEventBus);
         OEDCreativeModeTabs.CREATIVE_MODE_TABS.register(modEventBus);
@@ -49,5 +57,14 @@ public class OCRExtraDrivers {
             ModCBMultipart.initialize();
 
         PlanetDataProviders.register(new HardcodedPlanetDataProvider());
+    }
+
+    private void clientSetup(final FMLClientSetupEvent event) {
+        Manual.addProvider(new OEDPathProvider());
+        Manual.addTab(
+                new ItemStackTabIconRenderer(new ItemStack(OEDItems.SATELLITE_CARD)),
+                "gui.ocr_extra_drivers.manual_tab",
+                "%LANGUAGE%/ocr_extra_drivers/index.md"
+        );
     }
 }
