@@ -2,6 +2,7 @@ package net.dadamalda.ocr_extra_drivers.mixin.ocr_extra_drivers;
 
 import li.cil.oc.api.network.EnvironmentHost;
 import li.cil.oc.server.component.UpgradeSolarGenerator;
+import net.dadamalda.ocr_extra_drivers.Config;
 import net.dadamalda.ocr_extra_drivers.core.PlanetDataProviders;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -22,6 +23,10 @@ public class UpgradeSolarGeneratorMixin {
 
     @Inject(method = "isSunVisible", at = @At("RETURN"))
     private void calculateSolarEfficiency(CallbackInfoReturnable<Boolean> cir) {
+        if(!Config.enable_solar_efficiency) {
+            OCRExtraDrivers$solarEfficiency = 1.0f;
+            return;
+        }
         OCRExtraDrivers$solarEfficiency = PlanetDataProviders.gather(host.getEnvironmentLevel()).solarPower();
     }
 

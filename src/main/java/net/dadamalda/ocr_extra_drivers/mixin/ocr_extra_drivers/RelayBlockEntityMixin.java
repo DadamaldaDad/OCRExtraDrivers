@@ -10,6 +10,7 @@ import li.cil.oc.common.Tier;
 import li.cil.oc.common.blockentity.Relay;
 import li.cil.oc.internal.scalalib.Function1;
 import li.cil.oc.internal.scalalib.Option;
+import net.dadamalda.ocr_extra_drivers.Config;
 import net.dadamalda.ocr_extra_drivers.core.SatelliteNetwork;
 import net.dadamalda.ocr_extra_drivers.init.OEDItems;
 import net.minecraft.core.BlockPos;
@@ -62,11 +63,6 @@ public abstract class RelayBlockEntityMixin extends BlockEntity implements Satel
     public abstract ItemStack getItem(int slot);
 
     @Unique
-    private final int TICKS_BETWEEN_CHECKS = 40;
-    @Unique
-    private final int SATELLITE_DISTANCE = 512;
-
-    @Unique
     private boolean OCRExtraDrivers$hasSatelliteCard = false;
     @Unique
     private boolean OCRExtraDrivers$canSeeAbove = false;
@@ -102,7 +98,7 @@ public abstract class RelayBlockEntityMixin extends BlockEntity implements Satel
         if(level == null) return;
         MinecraftServer server = level.getServer();
         if(server == null) return;
-        if(OCRExtraDrivers$lastCheckedTick+TICKS_BETWEEN_CHECKS < server.getTickCount()) OCRExtraDrivers$checkLineOfSight();
+        if(OCRExtraDrivers$lastCheckedTick+Config.satellite_check_delay < server.getTickCount()) OCRExtraDrivers$checkLineOfSight();
         if(
                 (sentFrom == SatelliteNetwork.SatelliteDirection.ABOVE && OCRExtraDrivers$canSeeAbove) ||
                         (sentFrom == SatelliteNetwork.SatelliteDirection.BELOW && OCRExtraDrivers$canSeeBelow)
@@ -119,12 +115,12 @@ public abstract class RelayBlockEntityMixin extends BlockEntity implements Satel
     private void relayPacket(Option<Direction> sourceSide, Packet packet, CallbackInfo ci, @Local Function1<Double, Boolean> tryChangeBuffer) {
         if(!OCRExtraDrivers$hasSatelliteCard) return;
         if(!sourceSide.isDefined() && !isRepeater()) return;
-        double cost = Settings.get().wirelessCostPerRange()[Tier.Two()] * SATELLITE_DISTANCE;
+        double cost = Settings.get().wirelessCostPerRange()[Tier.Two()] * Config.satellite_distance;
         if(!Settings.get().ignorePower() && !tryChangeBuffer.apply(-cost)) return;
         if(level == null) return;
         MinecraftServer server = level.getServer();
         if(server == null) return;
-        if(OCRExtraDrivers$lastCheckedTick+TICKS_BETWEEN_CHECKS < server.getTickCount()) OCRExtraDrivers$checkLineOfSight();
+        if(OCRExtraDrivers$lastCheckedTick+Config.satellite_check_delay < server.getTickCount()) OCRExtraDrivers$checkLineOfSight();
         if(OCRExtraDrivers$canSeeAbove) {
             for(ResourceLocation dimension : OCRExtraDrivers$dimensionsAbove) {
                 SatelliteNetwork.receivePacketInDimension(packet, dimension, SatelliteNetwork.SatelliteDirection.BELOW);
