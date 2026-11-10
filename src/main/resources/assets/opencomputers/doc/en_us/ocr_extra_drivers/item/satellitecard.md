@@ -1,4 +1,4 @@
-# Satellie Card
+# Satellite Card
 
 ![Screaming into space](item:ocr_extra_drivers:satellitecard)
 

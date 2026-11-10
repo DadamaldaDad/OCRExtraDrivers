@@ -15,8 +15,8 @@ public class OEDPathProvider implements PathProvider {
         ResourceLocation location = BuiltInRegistries.ITEM.getKey(itemStack.getItem());
         if(!location.getNamespace().equals(OCRExtraDrivers.MODID)) return null;
         if(itemStack.getItem() instanceof BlockItem)
-            return "%LANGUAGE%/ocr_extra_drivers/block/"+location.getPath();
-        return "%LANGUAGE%/ocr_extra_drivers/item/"+location.getPath();
+            return "%LANGUAGE%/ocr_extra_drivers/block/"+location.getPath()+".md";
+        return "%LANGUAGE%/ocr_extra_drivers/item/"+location.getPath()+".md";
     }
 
     @Override
