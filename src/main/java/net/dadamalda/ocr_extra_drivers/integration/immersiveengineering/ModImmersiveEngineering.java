@@ -11,9 +11,11 @@ public class ModImmersiveEngineering {
         Driver.add(new DriverAccumulator());
         Driver.add(new DriverPowerMeter());
         Driver.add(new DriverCloche());
+        Driver.add(new DriverTurret());
 
         Driver.add(new DriverAccumulator.Provider());
         Driver.add(new DriverPowerMeter.Provider());
         Driver.add(new DriverCloche.Provider());
+        Driver.add(new DriverTurret.Provider());
     }
 }

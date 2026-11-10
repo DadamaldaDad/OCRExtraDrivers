@@ -3,6 +3,9 @@ package net.dadamalda.ocr_extra_drivers.integration.immersiveengineering;
 import blusunrize.immersiveengineering.api.multiblocks.blocks.env.IMultiblockLevel;
 import blusunrize.immersiveengineering.api.multiblocks.blocks.logic.IMultiblockState;
 import blusunrize.immersiveengineering.common.blocks.multiblocks.logic.*;
+import blusunrize.immersiveengineering.common.blocks.multiblocks.logic.arcfurnace.ArcFurnaceLogic;
+import blusunrize.immersiveengineering.common.blocks.multiblocks.logic.bottling_machine.BottlingMachineLogic;
+import blusunrize.immersiveengineering.common.blocks.multiblocks.logic.mixer.MixerLogic;
 import blusunrize.immersiveengineering.common.blocks.multiblocks.logic.sawmill.SawmillLogic;
 import li.cil.oc.api.driver.EnvironmentProvider;
 import li.cil.oc.api.network.ManagedEnvironment;
@@ -25,6 +28,13 @@ public class IEMultiblockDrivers {
         ENVIRONMENT_CLASSES.put(ResourceLocation.parse("immersiveengineering:metal_press"), EnvMetalPress.class);
         ENVIRONMENT_CLASSES.put(ResourceLocation.parse("immersiveengineering:crusher"), EnvCrusher.class);
         ENVIRONMENT_CLASSES.put(ResourceLocation.parse("immersiveengineering:sawmill"), EnvSawmill.class);
+        ENVIRONMENT_CLASSES.put(ResourceLocation.parse("immersiveengineering:mixer"), EnvMixer.class);
+        ENVIRONMENT_CLASSES.put(ResourceLocation.parse("immersiveengineering:bottling_machine"), EnvBottlingMachine.class);
+        ENVIRONMENT_CLASSES.put(ResourceLocation.parse("immersiveengineering:fermenter"), EnvFermenter.class);
+        ENVIRONMENT_CLASSES.put(ResourceLocation.parse("immersiveengineering:squeezer"), EnvSqueezer.class);
+        ENVIRONMENT_CLASSES.put(ResourceLocation.parse("immersiveengineering:refinery"), EnvRefinery.class);
+        ENVIRONMENT_CLASSES.put(ResourceLocation.parse("immersiveengineering:arc_furnace"), EnvArcFurnace.class);
+        ENVIRONMENT_CLASSES.put(ResourceLocation.parse("immersiveengineering:excavator"), EnvExcavator.class);
     }
 
     public static @Nullable ManagedEnvironment findEnvironment(IMultiblockState state, IMultiblockLevel multiblockLevel, Level level) {
@@ -42,6 +52,20 @@ public class IEMultiblockDrivers {
             return new EnvCrusher(state2, level);
         } else if(state instanceof SawmillLogic.State state2) {
             return new EnvSawmill(state2, level);
+        } else if(state instanceof MixerLogic.State state2) {
+            return new EnvMixer(state2, level);
+        } else if(state instanceof BottlingMachineLogic.State state2) {
+            return new EnvBottlingMachine(state2, level);
+        } else if(state instanceof FermenterLogic.State state2) {
+            return new EnvFermenter(state2, level);
+        } else if(state instanceof SqueezerLogic.State state2) {
+            return new EnvSqueezer(state2, level);
+        } else if(state instanceof RefineryLogic.State state2) {
+            return new EnvRefinery(state2, level);
+        } else if(state instanceof ArcFurnaceLogic.State state2) {
+            return new EnvArcFurnace(state2, level);
+        } else if(state instanceof ExcavatorLogic.State state2) {
+            return new EnvExcavator(state2);
         }
         return null;
     }

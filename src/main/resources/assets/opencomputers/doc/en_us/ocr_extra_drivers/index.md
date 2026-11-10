@@ -15,5 +15,5 @@ OCR Extra Drivers is a mod adding compatibility with other mods to OpenComputers
 ### Drivers
 Blocks from the following mods can now be interacted with using an [Adapter](../block/adapter.md):
 - Ad Astra
-- Immersive Engineering (unfinished)
+- Immersive Engineering
 - Stellaris

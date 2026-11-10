@@ -20,15 +20,24 @@ public class Config {
             .comment("Note: No checks will be made if there is no network activity")
             .defineInRange("satellite_check_delay", 40, 0, 20*60);
 
+    private static final ModConfigSpec.BooleanValue COMPUTERS_CAN_CHANGE_TURRET_TARGETING = BUILDER
+            .pop()
+            .push("immersive_engineering")
+            .comment("If enabled, computers can modify the targeting settings of turrets.")
+            .define("computers_can_change_turret_targeting", true);
+
     public static final ModConfigSpec SPEC = BUILDER.build();
 
     public static boolean enable_solar_efficiency;
     public static int satellite_distance;
     public static int satellite_check_delay;
 
+    public static boolean computers_can_change_turret_targeting;
+
     public static void load(ModConfigEvent event) {
         enable_solar_efficiency = ENABLE_SOLAR_EFFICIENCY.get();
         satellite_distance = SATELLITE_DISTANCE.get();
         satellite_check_delay = SATELLITE_CHECK_DELAY.get();
+        computers_can_change_turret_targeting = COMPUTERS_CAN_CHANGE_TURRET_TARGETING.get();
     }
 }
